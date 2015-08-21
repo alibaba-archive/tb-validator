@@ -8,16 +8,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lee715/tb-validator.git"
+    "url": "https://github.com/teambition/tb-validator.git"
   },
   "keywords": [
     "validator"
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/lee715/tb-validator/issues"
+    "url": "https://github.com/teambition/tb-validator/issues"
   },
-  "homepage": "https://github.com/lee715/tb-validator",
+  "homepage": "https://github.com/teambition/tb-validator",
   "dependencies": {
     "lodash": "^3.10.1",
     "validator": "^4.0.5"
