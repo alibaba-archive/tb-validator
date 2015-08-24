@@ -1,6 +1,6 @@
 {
   "name": "tb-validator",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "tb-validator",
   "main": "./lib/validator.js",
   "scripts": {
