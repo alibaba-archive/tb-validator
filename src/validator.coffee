@@ -337,3 +337,9 @@ module.exports =
   parse: parse
   config: (opts) ->
     OPTS = _.assign OPTS, opts
+  type: (type, target) ->
+    return Extends[MEKEY].$type target, type
+
+_.assign module.exports, Extends[OPKEY]
+_.assign module.exports, Extends[CUKEY]
+

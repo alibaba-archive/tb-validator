@@ -129,3 +129,8 @@ res = V.checkAll(toCheck, rules)
 console.log jsonStringify(res, 2)
 console.log toCheck
 
+console.log V.$in(1, [1,2])
+
+console.log V.$required(undefined, 1)
+
+console.log V.type('String', 'asdas')
