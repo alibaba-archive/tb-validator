@@ -2,7 +2,7 @@
   "name": "tb-validator",
   "version": "1.0.1",
   "description": "tb-validator",
-  "main": "lib/validator.js",
+  "main": "./lib/validator.js",
   "scripts": {
     "test": "make test"
   },
