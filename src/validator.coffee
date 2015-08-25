@@ -17,8 +17,8 @@ OPTS =
 
 Extends[OPKEY] =
 
-  $in: (item, arr) ->
-    return item in arr
+  $in: (target, arr) ->
+    return target in arr
 
   $eq: _.isEqual
 
@@ -30,12 +30,16 @@ Extends[CUKEY] =
   $required: (target, required) ->
     if required and isUndefined target
       return false
+    else if !required and isUndefined target
+      return 'passed'
     else
       return true
 
   $empty: (target, empty) ->
     if not empty and isEmpty target
       return false
+    else if empty and isEmpty target
+      return 'passed'
     else
       return true
 
@@ -64,9 +68,9 @@ extend = (type) ->
 
 # 空字符串 空对象 空数组则返true
 isEmpty = (obj) ->
-  if isArray obj and obj.length is 0
+  if isArray(obj) and obj.length is 0
     return true
-  if isObject obj and _.keys(obj).length is 0
+  if isObject(obj) and _.keys(obj).length is 0
     return true
   if obj is ''
     return true
@@ -296,20 +300,32 @@ check = (obj, rule) ->
     unless isArray target
       target = [target]
       single = true
-    rts = _.map target, (tar) ->
-      handler(tar, addtion)
-    rt = _.reduce rts, (a, b) ->
+    rest = []
+    results = _.map target, (tar) ->
+      r = handler(tar, addtion)
+      if r isnt 'passed'
+        rest.push tar
+      return r
+    wrapRt = _.reduce results, (a, b) ->
       a && b
-    return [rt, if single then rts[0] else rts]
+    results = if single then results[0] else results
+    return [wrapRt, results, rest]
 
   _check = (tar, key) ->
     toCheck = tar[key]
+    if isEmpty toCheck
+      unless rule.$empty
+        err = '$empty'
+      return !!rule.$empty
     for cusRule in CUS
       handler = Extends[CUKEY][cusRule]
-      [rt] = _wrap toCheck, handler, rule[cusRule]
+      [rt, rts, rest] = _wrap toCheck, handler, rule[cusRule]
       unless rt
         err = cusRule
         return false
+      unless rest.length
+        return true
+      toCheck = rest
     if not method
       rt = false
       err = 'Operation'
