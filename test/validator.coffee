@@ -59,6 +59,8 @@ ruleForTest =
     kom:
       '_id': 'ObjectID'
       'secret': 'String'
+  'array': _.isArray
+  'array1': $array: 'String'
 
 toCheck =
   type: 1
@@ -117,6 +119,10 @@ toCheck =
   kom:
     _id: '51762b8f78cfa9f357000011'
     secret: 'adefrfsae'
+  array: [1,2,3,4]
+  array1: [
+    'asdadzxc', 'asdzeqwe'
+  ]
 
 rules = V.parse(ruleForTest)
 res = V.checkAll(toCheck, rules)

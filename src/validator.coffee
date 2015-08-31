@@ -204,6 +204,7 @@ parse = (obj) ->
       key = keys.pop()
       if key is '$array'
         key = keys.pop()
+        rule.isArray = true
       rule.key = key
       rule.path = keys.join('.')
       rule.sys = sys
@@ -272,6 +273,7 @@ checkAll = (obj, rules) ->
       path: rule.path
       err: err
       target: target
+      key: rule.key
     len = rule.sys.length
     maxLen = len if len > maxLen
   rt = _resolve(queue, maxLen)
@@ -297,7 +299,10 @@ check = (obj, rule) ->
 
   _wrap = (target, handler, addtion) ->
     single = false
-    unless isArray target
+    unless rule.isArray
+      target = [target]
+      single = true
+    if rule.isArray and isUndefined(target)
       target = [target]
       single = true
     rest = []
@@ -309,6 +314,7 @@ check = (obj, rule) ->
     wrapRt = _.reduce results, (a, b) ->
       a && b
     results = if single then results[0] else results
+    rest = if single then rest[0] else rest
     return [wrapRt, results, rest]
 
   _check = (tar, key) ->
@@ -323,7 +329,7 @@ check = (obj, rule) ->
       unless rt
         err = cusRule
         return false
-      unless rest.length
+      if isUndefined(rest) or ((isArray(rest) and not rest.length))
         return true
       toCheck = rest
     if not method
