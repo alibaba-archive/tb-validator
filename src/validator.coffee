@@ -5,7 +5,7 @@ _         = require('lodash')
 
 OPS = '$in,$eq,$neq'.split(',')
 SYS = '$or,$and'.split(',')
-CUS = '$required,$empty'.split(',')
+CUS = '$empty,$required'.split(',')
 
 OPKEY = 'op'
 CUKEY = 'cu'
@@ -268,7 +268,7 @@ checkAll = (obj, rules) ->
   # 检查规则
   rules.forEach (rule) ->
     [err, res, target] = check(obj, rule)
-    queue.push [rule.sys, res, rule.id]
+    queue.push [rule.sys.slice(), res, rule.id]
     rulesById[rule.id] =
       path: rule.path
       err: err
@@ -285,7 +285,7 @@ checkAll = (obj, rules) ->
   return [errArr, rt]
 
 check = (obj, rule) ->
-  { path, key, required, empty } = rule
+  { path, key } = rule
   [ op, data ] = rule.check
   target = result obj, path
   rt = false
@@ -318,11 +318,7 @@ check = (obj, rule) ->
     return [wrapRt, results, rest]
 
   _check = (tar, key) ->
-    toCheck = tar[key]
-    if isEmpty toCheck
-      unless rule.$empty
-        err = '$empty'
-      return !!rule.$empty
+    toCheck = tar and tar[key]
     for cusRule in CUS
       handler = Extends[CUKEY][cusRule]
       [rt, rts, rest] = _wrap toCheck, handler, rule[cusRule]
@@ -357,6 +353,9 @@ module.exports =
   extendMethod: extend(MEKEY)
   checkAll: checkAll
   parse: parse
+  checkRule: (data, rule) ->
+    rule = parse(rule)
+    checkAll(data, rule)
   config: (opts) ->
     OPTS = _.assign OPTS, opts
   type: (type, target) ->
@@ -364,4 +363,3 @@ module.exports =
 
 _.assign module.exports, Extends[OPKEY]
 _.assign module.exports, Extends[CUKEY]
-
