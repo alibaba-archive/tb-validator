@@ -5,7 +5,7 @@ _         = require('lodash')
 
 OPS = '$in,$eq,$neq'.split(',')
 SYS = '$or,$and'.split(',')
-CUS = '$empty,$required'.split(',')
+CUS = '$required,$empty'.split(',')
 
 OPKEY = 'op'
 CUKEY = 'cu'
@@ -305,6 +305,8 @@ check = (obj, rule) ->
     if rule.isArray and isUndefined(target)
       target = [target]
       single = true
+    if rule.isArray and isEmpty(target)
+      target = ['']
     rest = []
     results = _.map target, (tar) ->
       r = handler(tar, addtion)
