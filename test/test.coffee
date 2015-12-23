@@ -22,3 +22,10 @@ console.log V.checkRule(data3, rule)
 expect(V.checkRule(data3, rule)[0][0]['err']).equal('$required')
 expect(V.checkRule(data3, rule)[1]).equal(true)
 
+# addtion test
+
+rule =
+  str: 'String:required:empty:null'
+  use:
+    $in: ['how', 'are', 'you']
+
