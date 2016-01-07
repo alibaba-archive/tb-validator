@@ -26,6 +26,7 @@ module.exports = new Base
   Data: DATA
   has: (str) ->
     return false unless str
+    str = "#{str}"
     keys = Object.keys(@Data)
     for key in keys
       if str.indexOf(key) is 0

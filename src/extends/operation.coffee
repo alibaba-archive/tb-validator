@@ -13,12 +13,10 @@ OPERATIONS =
 
 module.exports = new Base
   Data: OPERATIONS
-  check: (target, op) ->
+  check: (arr, op) ->
     for key, val of op
       handler = @get(key)
       return false unless handler
-      handler = _.partialRight handler, val
-      unless _.isArray(target)
-        target = [target]
-      return _.reduce _.map(target, handler), (a, b) ->
+      handler = _.partial handler, _, val
+      return _.reduce _.map(arr, handler), (a, b) ->
         return a and b

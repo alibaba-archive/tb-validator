@@ -1,17 +1,20 @@
 require('./extend')
 V = {Rule, RuleSet, Path} = require('../src/validator')
 
-rule1 =
-  "str": "String:required"
-  $or:
-    a: "String:required"
-    b: "Number:required"
-    c: $array: "Number:required"
+rule1 = [
+  a: 'String'
+  b: 'Number'
+,
+  a: 'String'
+  b: 'Number'
+]
 
-obj1 =
-  str: 12
-  a: 'asd'
-  b: 6
-  c: [9,8,'as']
+obj1 = [
+  a: 'as'
+  b: 1
+,
+  a: 'as'
+  b: 1
+]
 
-console.log V.check(rule1, obj1)
+expect(V.check(rule1, obj1)[0]).equal(true)

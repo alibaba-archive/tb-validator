@@ -34,14 +34,17 @@ class TreeNode
 
   resolve: ->
     _val = @_val
-    return @_op.apply(null, _.map(_val, (val) ->
+    res = @_op.apply(null, _.map(_val, (val) ->
       return val.resolve()
     ))
+    @status = res
+    return res
 
   addChildNode: (child) ->
     _val = @_val
     _val.push child
     @_map[child.name] = child
+    child._parent = @
 
   getChild: (name) ->
     return @_map[name]
@@ -65,8 +68,22 @@ class LogicTree
     @_leafMap[leaf.name] = leaf
     node.addChildNode(leaf)
 
+  findErrorLeafs: ->
+    _leafMap = @_leafMap
+    errLeafs = []
+    Object.keys(_leafMap).forEach (name) ->
+      leaf = _leafMap[name]
+      unless leaf.val()
+        node = leaf._parent
+        while node and not node.status
+          if node.name is 'root'
+            break
+          node = node._parent
+        if node.name is 'root'
+          errLeafs.push leaf.name
+    return errLeafs
+
   resolve: (valObj) ->
-    console.log valObj
     for key, val of valObj
       leaf = @_leafMap[key]
       leaf.val(val) if leaf

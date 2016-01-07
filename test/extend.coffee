@@ -88,17 +88,6 @@ Validator.Email = (email) ->
 
 V.includeType Validator
 
-V.extendAddition
-
-  $null: (target, canNull) ->
-    isNull = _.isNull(target) or (_.isString(target) and target.toLowerCase() is 'null')
-    if not canNull and isNull
-      return false
-    else if canNull and isNull
-      return 'passed'
-    else
-      return true
-
 V.extendOperation
 
   $hasKeys: (target, keys) ->

@@ -5,6 +5,8 @@ Tree = require('./tree')
 Rule = require('./rule')
 
 afterLogic = (path) ->
+  console.log path
+  return false if path.length is 0
   Extends.logic.has _.last(path)
 
 class RuleSet
@@ -13,6 +15,7 @@ class RuleSet
     @uid = _.uniqueId('RuleSet_')
     @_treeHdl = new Tree
     @_rules = []
+    @_ruleMap = {}
     @parse(obj)
     @
 
@@ -24,6 +27,7 @@ class RuleSet
     ruleHdl = new Rule(check, addition, path)
     ruleHdl.uid = @uniqRule()
     @_rules.push ruleHdl
+    @_ruleMap[ruleHdl.uid] = ruleHdl
     @_treeHdl.initByChain(logicChain, ruleHdl.uid)
     @
 
@@ -33,7 +37,13 @@ class RuleSet
     rules.forEach (rule) ->
       rt = rule.check(obj)
       valObj[rule.uid] = rt
-    return @_treeHdl.resolve(valObj)
+    res = !!@_treeHdl.resolve(valObj)
+    uids
+    unless res
+      uids = @_treeHdl.findErrorLeafs()
+    errs = _.map uids, (uid) =>
+      return @_ruleMap[uid].toJSON()
+    return [res, errs]
 
   parse: (obj) ->
     return null unless obj
@@ -47,7 +57,12 @@ class RuleSet
     _parse = (data, path) ->
       depth++
       andKey = getKey('$and')
-      if _.isObject data
+      if _.isArray data
+        data.forEach (item, ind) ->
+          _parse item, path.concat(unless afterLogic(path) then [andKey, ind] else ind)
+      else if _.isFunction data
+        _toRule(data, path, _.last(path))
+      else if _.isPlainObject data
         keys = Object.keys(data)
         keys.forEach (key) ->
           if Extends.operation.has key
@@ -59,12 +74,7 @@ class RuleSet
           else
             path.push(andKey) unless afterLogic(path)
             _parse data[key], path.concat(key)
-      else if _.isArray data
-        data.forEach (item, ind) ->
-          _parse item, path.concat(unless afterLogic(path) then [andKey, ind] else ind)
       else if _.isString data
-        _toRule(data, path, _.last(path))
-      else if _.isFunction data
         _toRule(data, path, _.last(path))
       else
         console.log 'err', path
@@ -74,7 +84,7 @@ class RuleSet
       rule = {}
       if Extends.operation.has key
         rule.path = path
-        rule.check = data[key]
+        rule.check = data
       else if _.isString data
         rule.path = path
         ps = data.split(':')
