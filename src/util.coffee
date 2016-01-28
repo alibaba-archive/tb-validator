@@ -2,9 +2,16 @@
 
 module.exports =
 
-  startWithDollar: (str) ->
+  isStartWithDollar: (str) ->
     return false unless typeof str is 'string'
     return /^\$/.test(str)
+
+  toStartWithDollar: (str) ->
+    return false unless typeof str is 'string'
+    if /^\$/.test(str)
+      return str
+    else
+      return "$#{str}"
 
   slice: (args, pos=0, end) ->
     arr = []

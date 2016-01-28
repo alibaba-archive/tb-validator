@@ -4,7 +4,7 @@
   "description": "tb-validator",
   "main": "./lib/validator.js",
   "scripts": {
-    "test": "make test"
+    "test": "coffee test/index.coffee"
   },
   "repository": {
     "type": "git",
