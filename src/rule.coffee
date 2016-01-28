@@ -40,7 +40,7 @@ class Rule
         @_errType = 'addition'
         return false
     if _type is 'function'
-      return _rule(tar)
+      return _.reduce _.map(tar, _rule), (a, b) -> return a and b
     return Extends[_type].check(tar, _rule)
 
   toJSON: ->

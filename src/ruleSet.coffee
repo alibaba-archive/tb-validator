@@ -5,7 +5,6 @@ Tree = require('./tree')
 Rule = require('./rule')
 
 afterLogic = (path) ->
-  console.log path
   return false if path.length is 0
   Extends.logic.has _.last(path)
 

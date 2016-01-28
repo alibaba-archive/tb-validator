@@ -4,7 +4,6 @@ V = require('../src/validator')
 
 rule =
   a: (target) ->
-    console.log target
     if target is undefined
       return true
     if target is null

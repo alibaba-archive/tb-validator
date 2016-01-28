@@ -13,7 +13,6 @@ module.exports =
   includeType: _.bind type.include, type
   check: (rule, obj) ->
     rset = new RuleSet(rule)
-    console.log rset
     rset.check(obj)
   Rule: Rule
   RuleSet: RuleSet
