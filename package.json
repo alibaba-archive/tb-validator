@@ -4,7 +4,7 @@
   "description": "tb-validator",
   "main": "./lib/validator.js",
   "scripts": {
-    "test": "coffee test/index.coffee"
+    "test": "coffee -o lib -c v2 && NODE_ENV=mocha mocha"
   },
   "repository": {
     "type": "git",
@@ -21,5 +21,10 @@
   "dependencies": {
     "lodash": "^3.10.1",
     "validator": "^4.0.5"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.10.0",
+    "mocha": "~2.3.4",
+    "should": "~8.2.1"
   }
 }

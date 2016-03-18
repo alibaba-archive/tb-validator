@@ -1,5 +1,0 @@
-require './addition'
-require './logic'
-require './operation'
-require './path'
-require './function'
