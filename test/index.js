@@ -119,7 +119,8 @@ describe('Rule', function () {
   it('expression', function () {
     var rule = {
       a: {
-        $in: [1, 2]
+        $in: [1, 2],
+        $eq: 1
       },
       b: {
         $eq: 12
